@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from send_email import send_email
 import requests
 import os
 
@@ -10,7 +11,13 @@ url = f"https://newsapi.org/v2/everything?q=tesla&from=2024-09-30&sortBy=publish
 
 request = requests.get(url)
 content = request.json()
-# print(content["articles"])
 
+body = ""
 for article in content["articles"]:
-    print(article["title"])
+    try:
+        body = body + article["title"] + "\n" + article["description"] + 2*"\n"
+    except:
+        continue
+
+body = body.encode("utf-8")
+send_email(message=body)
